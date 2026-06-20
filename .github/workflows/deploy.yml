@@ -1,0 +1,44 @@
+name: Pipeline de Integração Contínua (CI)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout do Código
+      uses: actions/checkout@v4
+
+    - name: Configurar Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+        cache: 'pip'
+
+    - name: Instalar Dependências
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Executar Linter (flake8 opcional)
+      run: |
+        pip install flake8
+        # Para apenas se houver erros de sintaxe Python
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Avisos tratados como não-fatais
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Executar Testes Automatizados com PyTest
+      run: |
+        pytest
+      env:
+        # Configuração de chaves mockadas para execução segura dos testes na nuvem do GitHub Actions
+        GEMINI_API_KEY: "mock_github_actions_key"
+        FIREBASE_PROJECT_ID: "mock-firebase-project"
+        FIREBASE_CLIENT_EMAIL: "mock-client-email@gserviceaccount.com"
+        FIREBASE_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nmock_private_key\n-----END PRIVATE KEY-----\n"
