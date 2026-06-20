@@ -1,0 +1,29 @@
+# Ambientes virtuais e dependências locais
+venv/
+.venv/
+env/
+ENV/
+bin/
+lib/
+include/
+share/
+
+# Arquivos de credenciais e variáveis locais
+.env
+db_offline.json
+
+# Caches e arquivos temporários do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# Configurações locais de IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
